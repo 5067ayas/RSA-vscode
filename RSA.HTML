@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcul RSA - Explications Détaillées</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a237e; /* Bleu foncé */
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffeb3b; /* Jaune vif */
+            color: #1a237e; /* Bleu foncé */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #1a237e; /* Bleu foncé */
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #ffffff;
+            color: #1a237e;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #1a237e; /* Bleu foncé */
+            color: #ffeb3b; /* Jaune vif */
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #1565c0; /* Bleu plus foncé */
+        }
+
+        #results {
+            margin-top: 20px;
+        }
+
+        #results p {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        .explanation {
+            background-color: #1e88e5; /* Bleu clair */
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .note {
+            background-color: #ff9800; /* Orange */
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 14px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calcul RSA - Explications Détaillées</h1>
+
+        <!-- Formulaire pour saisir p, q, et e -->
+        <form id="rsa-form">
+            <label for="p">Nombre premier p :</label>
+            <input type="number" id="p" name="p" required min="2">
+
+            <label for="q">Nombre premier q (différent de p) :</label>
+            <input type="number" id="q" name="q" required min="2">
+
+            <label for="e">Exposant public e :</label>
+            <input type="number" id="e" name="e" required min="2">
+
+            <button type="submit">Générer les clés RSA et Hacher</button>
+        </form>
+
+        <!-- Résultats -->
+        <div id="results">
+            <h2>Résultats :</h2>
+            <p><strong>Clé publique :</strong> <span id="public-key">-</span></p>
+            <p><strong>Clé privée :</strong> <span id="private-key">-</span></p>
+            <p><strong>Haché SHA-256 :</strong> <span id="hash-value">-</span></p>
+        </div>
+
+        <!-- Explication du calcul RSA -->
+        <div class="explanation">
+            <h3>Explication Détaillée du Calcul RSA</h3>
+            <p>Le cryptage RSA repose sur les étapes suivantes :</p>
+            <ol>
+                <li><strong>Choix de p et q :</strong> Ces deux nombres doivent être premiers. Par exemple, si p = 11 et q = 13, alors :
+                    <ul>
+                        <li>n = p × q = 11 × 13 = 143.</li>
+                        <li>φ(n) = (p - 1) × (q - 1) = (11 - 1) × (13 - 1) = 10 × 12 = 120.</li>
+                    </ul>
+                </li>
+                <li><strong>Choix de e :</strong> L'exposant public e doit être un entier tel que 1 < e < φ(n) et PGCD(e, φ(n)) = 1. Par exemple, si e = 7, alors :
+                    <ul>
+                        <li>PGCD(7, 120) = 1, donc e est valide.</li>
+                    </ul>
+                </li>
+                <li><strong>Calcul de d :</strong> d est l'inverse modulaire de e modulo φ(n). Cela signifie que d × e ≡ 1 mod φ(n). Par exemple :
+                    <ul>
+                        <li>d × 7 ≡ 1 mod 120 donne d = 103.</li>
+                    </ul>
+                </li>
+                <li><strong>Clés générées :</strong>
+                    <ul>
+                        <li>Clé publique : (e, n) = (7, 143).</li>
+                        <li>Clé privée : (d, n) = (103, 143).</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+
+        <!-- Note pour l'utilisateur -->
+        <div class="note">
+            <h3>Note Importante : Instructions de Calcul</h3>
+            <p>- Les nombres p et q doivent être des <strong>nombres premiers</strong>. Exemples : 2, 3, 5, 7, 11, 13, etc.</p>
+            <p>- Si p ou q n'est pas premier, le calcul de φ(n) sera incorrect.</p>
+            <p>- Pour vérifier si un nombre est premier, divisez-le par tous les nombres inférieurs ou égaux à sa racine carrée. S'il n'est divisible par aucun d'entre eux, il est premier.</p>
+            <p>- L'exposant e doit être premier avec φ(n). Pour vérifier cela, calculez le PGCD de e et φ(n). Si le résultat est 1, e est valide.</p>
+            <p>- Pour calculer d, utilisez l'algorithme d'Euclide étendu pour trouver l'inverse modulaire de e modulo φ(n).</p>
+            <p>- Exemple de nombres non valides :
+                <ul>
+                    <li>p = 10 : Non premier (divisible par 2 et 5).</li>
+                    <li>e = 10 : Non premier avec φ(n) = 120 (car PGCD(10, 120) = 10 ≠ 1).</li>
+                </ul>
+            </p>
+        </div>
+    </div>
+
+    <footer>
+        Aya Elagbani - 2024/2025
+    </footer>
+
+    <script>
+        // Fonction pour vérifier si un nombre est premier
+        function estPremier(n) {
+            if (n <= 1) return false;
+            for (let i = 2; i <= Math.sqrt(n); i++) {
+                if (n % i === 0) return false;
+            }
+            return true;
+        }
+
+        // Fonction pour calculer le PGCD
+        function pgcd(a, b) {
+            while (b !== 0) {
+                [a, b] = [b, a % b];
+            }
+            return a;
+        }
+
+        // Fonction pour calculer l'inverse modulaire
+        function inverseModulaire(e, phi) {
+            let d = 0, x1 = 0, x2 = 1, y1 = 1, tempPhi = phi;
+            while (e > 1) {
+                let quotient = Math.floor(e / tempPhi);
+                [tempPhi, e] = [e % tempPhi, tempPhi];
+                [x1, x2] = [x2 - quotient * x1, x1];
+            }
+            if (x2 < 0) x2 += phi;
+            return x2;
+        }
+
+        // Fonction pour hacher un message avec SHA-256
+        async function hasherMessageSHA256(message) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+        }
+
+        // Gestion du formulaire
+        document.getElementById("rsa-form").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            // Récupérer les valeurs saisies
+            const p = parseInt(document.getElementById("p").value);
+            const q = parseInt(document.getElementById("q").value);
+            const e = parseInt(document.getElementById("e").value);
+
+            // Vérifier que p et q sont premiers
+            if (!estPremier(p) || !estPremier(q)) {
+                alert("Erreur : p et q doivent être des nombres premiers.");
+                return;
+            }
+
+            // Vérifier que p et q sont différents
+            if (p === q) {
+                alert("Erreur : p et q doivent être différents.");
+                return;
+            }
+
+            // Calculer n et φ(n)
+            const n = p * q;
+            const phi = (p - 1) * (q - 1);
+
+            // Vérifier que e est valide
+            if (e <= 1 || e >= phi || pgcd(e, phi) !== 1) {
+                alert("Erreur : e doit être compris entre 1 et φ(n), et premier avec φ(n).");
+                return;
+            }
+
+            // Calculer d
+            const d = inverseModulaire(e, phi);
+
+            // Hacher un message exemple
+            const message = "BonjourRSA";
+            const hashValue = await hasherMessageSHA256(message);
+
+            // Afficher les résultats
+            document.getElementById("public-key").textContent = `(e, n) = (${e}, ${n})`;
+            document.getElementById("private-key").textContent = `(d, n) = (${d}, ${n})`;
+            document.getElementById("hash-value").textContent = hashValue;
+        });
+    </script>
+</body>
+</html>
